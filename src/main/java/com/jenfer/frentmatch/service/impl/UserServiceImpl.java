@@ -2,11 +2,11 @@ package com.jenfer.frentmatch.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yupi.usercenter.common.ErrorCode;
-import com.yupi.usercenter.exception.BusinessException;
-import com.yupi.usercenter.model.domain.User;
-import com.yupi.usercenter.service.UserService;
-import com.yupi.usercenter.mapper.UserMapper;
+import com.jenfer.frentmatch.common.ErrorCode;
+import com.jenfer.frentmatch.exception.BusinessException;
+import com.jenfer.frentmatch.mapper.UserMapper;
+import com.jenfer.frentmatch.model.domain.User;
+import com.jenfer.frentmatch.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -17,14 +17,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.yupi.usercenter.contant.UserConstant.USER_LOGIN_STATE;
+import static com.jenfer.frentmatch.contant.UserConstant.USER_LOGIN_STATE;
 
-/**
- * 用户服务实现类
- *
- * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
- * @from <a href="https://yupi.icu">编程导航知识星球</a>
- */
+
 @Service
 @Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
@@ -33,7 +28,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     @Resource
     private UserMapper userMapper;
 
-    // https://www.code-nav.cn/
 
     /**
      * 盐值，混淆密码
@@ -102,7 +96,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return user.getId();
     }
 
-    // [加入星球](https://www.code-nav.cn/) 从 0 到 1 项目实战，经验拉满！10+ 原创项目手把手教程、7 日项目提升训练营、60+ 编程经验分享直播、1000+ 项目经验笔记
 
     /**
      * 用户登录
@@ -189,4 +182,3 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
 }
 
-// [加入我们](https://yupi.icu) 从 0 到 1 项目实战，经验拉满！10+ 原创项目手把手教程、7 日项目提升训练营、1000+ 项目经验笔记、60+ 编程经验分享直播
