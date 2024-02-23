@@ -19,7 +19,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select() //选择哪些路径和api会生成document
-                .apis(RequestHandlerSelectors.basePackage("com.jenfer.frentmatch.controller"))//controller路径
+                .apis(RequestHandlerSelectors.basePackage("com.jenfer.frentmatch. controller"))//controller路径
                 .paths(PathSelectors.any())  //对所有路径进行监控
                 .build();
     }
