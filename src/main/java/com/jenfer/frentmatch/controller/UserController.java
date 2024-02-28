@@ -1,22 +1,20 @@
 package com.jenfer.frentmatch.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.fasterxml.jackson.databind.ser.Serializers;
 
 import com.jenfer.frentmatch.common.BaseResponse;
 import com.jenfer.frentmatch.common.ErrorCode;
 import com.jenfer.frentmatch.common.ResultUtils;
 import com.jenfer.frentmatch.exception.BusinessException;
 import com.jenfer.frentmatch.model.domain.User;
-import com.jenfer.frentmatch.model.domain.request.UserLoginRequest;
-import com.jenfer.frentmatch.model.domain.request.UserRegisterRequest;
+import com.jenfer.frentmatch.model.request.UserLoginRequest;
+import com.jenfer.frentmatch.model.request.UserRegisterRequest;
 import com.jenfer.frentmatch.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -150,5 +148,8 @@ public class UserController {
         User user = (User) userObj;
         return user != null && user.getUserRole() == ADMIN_ROLE;
     }
+
+
+
 
 }
