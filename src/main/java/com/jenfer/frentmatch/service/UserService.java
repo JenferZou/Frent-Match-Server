@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.jenfer.frentmatch.model.domain.User;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 
 public interface UserService extends IService<User> {
@@ -46,4 +47,12 @@ public interface UserService extends IService<User> {
      * @return
      */
     int userLogout(HttpServletRequest request);
+
+
+    List<User> searchUserByTags(List<String> tagNameList);
+
+
+    List<User> searchUserByTagsSql(List<String> tagNameList);
+
+
 }
