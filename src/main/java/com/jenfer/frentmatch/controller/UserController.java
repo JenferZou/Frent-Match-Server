@@ -10,6 +10,7 @@ import com.jenfer.frentmatch.model.domain.User;
 import com.jenfer.frentmatch.model.request.UserLoginRequest;
 import com.jenfer.frentmatch.model.request.UserRegisterRequest;
 import com.jenfer.frentmatch.service.UserService;
+import io.swagger.models.auth.In;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
@@ -157,6 +158,19 @@ public class UserController {
         }
         List<User> users = userService.searchUserByTags(tagNameList);
         return ResultUtils.success(users);
+
+    }
+
+
+
+    @PostMapping("/update")
+    public BaseResponse<Integer> update(@RequestBody User user, HttpServletRequest request){
+        if(user==null){
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        User loginUser = userService.getLoginUser(request);
+        int result = userService.updateUser(user,loginUser);
+        return ResultUtils.success(result);
 
     }
 

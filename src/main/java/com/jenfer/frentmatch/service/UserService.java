@@ -48,6 +48,11 @@ public interface UserService extends IService<User> {
      */
     int userLogout(HttpServletRequest request);
 
+    /**
+     * 获取当前登录用户信息
+     * @return
+     */
+    User getLoginUser(HttpServletRequest request);
 
     List<User> searchUserByTags(List<String> tagNameList);
 
@@ -55,4 +60,10 @@ public interface UserService extends IService<User> {
     List<User> searchUserByTagsSql(List<String> tagNameList);
 
 
+    int updateUser(User user, User loginUser);
+
+
+    boolean isAdmin(HttpServletRequest request);
+
+    boolean isAdmin(User loginUser);
 }

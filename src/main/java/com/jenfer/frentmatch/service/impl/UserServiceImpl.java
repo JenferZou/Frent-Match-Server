@@ -25,6 +25,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.jenfer.frentmatch.contant.UserConstant.ADMIN_ROLE;
 import static com.jenfer.frentmatch.contant.UserConstant.USER_LOGIN_STATE;
 
 
@@ -190,6 +191,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
+    public User getLoginUser(HttpServletRequest request) {
+        if (request == null) {
+            return null;
+        }
+        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
+        if (userObj == null) {
+            throw new BusinessException(ErrorCode.NO_AUTH);
+        }
+        return (User) userObj;
+    }
+
+
+    @Override
     public List<User> searchUserByTagsSql(List<String> tagNameList) {
         if(CollectionUtils.isEmpty(tagNameList)){
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -204,6 +218,36 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
 
         return users.stream().map(this::getSafetyUser).collect(Collectors.toList());
+    }
+
+    @Override
+    public int updateUser(User user, User loginUser) {
+        Long userId = user.getId();
+        if(userId<0){
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        if(!isAdmin(loginUser)&&userId!=loginUser.getId()){
+            throw new BusinessException(ErrorCode.NO_AUTH);
+
+        }
+        User userDb = userMapper.selectById(userId);
+        if(userDb==null){
+            throw new BusinessException(ErrorCode.NULL_ERROR);
+        }
+
+        return userMapper.updateById(user);
+    }
+
+    @Override
+    public boolean isAdmin(HttpServletRequest request) {
+        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
+        User user = (User) userObj;
+        return user!=null&&user.getUserRole()==ADMIN_ROLE;
+    }
+
+    @Override
+    public boolean isAdmin(User loginUser) {
+        return loginUser!=null && loginUser.getUserRole()==ADMIN_ROLE;
     }
 
 
