@@ -1,7 +1,9 @@
 package com.jenfer.frentmatch.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jenfer.frentmatch.common.BaseResponse;
 import com.jenfer.frentmatch.common.ErrorCode;
 import com.jenfer.frentmatch.common.ResultUtils;
@@ -11,13 +13,17 @@ import com.jenfer.frentmatch.model.request.UserLoginRequest;
 import com.jenfer.frentmatch.model.request.UserRegisterRequest;
 import com.jenfer.frentmatch.service.UserService;
 import io.swagger.models.auth.In;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static com.jenfer.frentmatch.contant.UserConstant.ADMIN_ROLE;
@@ -26,7 +32,11 @@ import static com.jenfer.frentmatch.contant.UserConstant.USER_LOGIN_STATE;
 
 @RestController
 @RequestMapping("/user")
+@Slf4j
 public class UserController {
+
+    @Resource
+    private RedisTemplate redisTemplate;
 
     @Resource
     private UserService userService;
@@ -161,6 +171,31 @@ public class UserController {
 
     }
 
+
+    @GetMapping("/recommend")
+    public BaseResponse<Page<User>> recommendUsers(long pageSize,long pageNum,HttpServletRequest request){
+        User loginUser = userService.getLoginUser(request);
+        String redisKey = String.format("recommend:user:%s", loginUser.getId());
+        ValueOperations valueOperations = redisTemplate.opsForValue();
+        Page<User> userPage = (Page<User>)valueOperations.get(redisKey);
+        if(userPage!=null){
+            List<User> list = userPage.getRecords().stream().map(user -> userService.getSafetyUser(user)).collect(Collectors.toList());
+            userPage.setRecords(list);
+            return ResultUtils.success(userPage);
+        }
+        LambdaQueryWrapper<User> userLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        userPage = userService.page(new Page<User>(pageNum, pageSize), userLambdaQueryWrapper);
+        List<User> list = userPage.getRecords().stream().map(user -> userService.getSafetyUser(user)).collect(Collectors.toList());
+        userPage.setRecords(list);
+        try {
+            valueOperations.set(redisKey,userPage,300000, TimeUnit.MILLISECONDS);
+        } catch (Exception e) {
+            log.error("redis set error",e);
+        }
+
+        return ResultUtils.success(userPage);
+        
+    }
 
 
     @PostMapping("/update")
