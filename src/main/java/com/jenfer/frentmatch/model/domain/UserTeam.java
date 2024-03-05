@@ -22,33 +22,33 @@ public class UserTeam implements Serializable {
     /**
      * 用户id
      */
-    private Long userid;
+    private Long userId;
 
     /**
      * 队伍id
      */
-    private Long teamid;
+    private Long teamId;
 
     /**
      * 加入时间
      */
-    private Date jointime;
+    private Date joinTime;
 
     /**
      * 创建时间
      */
-    private Date createtime;
+    private Date createTime;
 
     /**
      * 
      */
-    private Date updatetime;
+    private Date updateTime;
 
     /**
      * 是否删除
      */
     @TableLogic
-    private Integer isdelete;
+    private Integer isDelete;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

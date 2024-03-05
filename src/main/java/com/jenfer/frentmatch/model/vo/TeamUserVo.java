@@ -1,28 +1,25 @@
-package com.jenfer.frentmatch.model.domain;
+package com.jenfer.frentmatch.model.vo;
 
-import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * 队伍
- * @TableName team
- */
-@TableName(value ="team")
 @Data
-public class Team implements Serializable {
+public class TeamUserVo implements Serializable {
+
+    private static final long serialVersionUID = 1899063007109226944L;
+
     /**
      * id
      */
-    @TableId(type = IdType.AUTO)
     private Long id;
 
     /**
      * 队伍名称
      */
     private String name;
+
 
     /**
      * 描述
@@ -40,7 +37,7 @@ public class Team implements Serializable {
     private Date expireTime;
 
     /**
-     * 用户id（队长 id）
+     * 用户id
      */
     private Long userId;
 
@@ -50,27 +47,27 @@ public class Team implements Serializable {
     private Integer status;
 
     /**
-     * 密码
-     */
-    private String password;
-
-    /**
      * 创建时间
      */
     private Date createTime;
 
     /**
-     * 
+     * 更新时间
      */
     private Date updateTime;
 
     /**
-     * 是否删除
+     * 创建人用户信息
      */
+    private UserVo createUser;
 
-    @TableLogic
-    private Integer isDelete;
+    /**
+     * 已加入的用户数
+     */
+    private Integer hasJoinNum;
 
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
+    /**
+     * 是否已加入队伍
+     */
+    private boolean hasJoin = false;
 }
