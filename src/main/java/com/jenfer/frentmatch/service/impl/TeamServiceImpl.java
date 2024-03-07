@@ -367,6 +367,41 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
         return userTeamService.remove(userTeamLambdaQueryWrapper);
     }
 
+    @Override
+    public boolean deleteTeam(long id, User loginUser) {
+        Team team = getTeamById(id);
+        Long teamId = team.getId();
+
+        if(team.getUserId()!=loginUser.getId()){
+            throw new BusinessException(ErrorCode.NO_AUTH,"无权限");
+        }
+        LambdaQueryWrapper<UserTeam> userTeamLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        userTeamLambdaQueryWrapper.eq(UserTeam::getTeamId, teamId);
+        boolean result = userTeamService.remove(userTeamLambdaQueryWrapper);
+        if(!result){
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "删除队伍关联信息失败");
+        }
+        return this.removeById(teamId);
+
+    }
+
+
+    /**
+     * 根据 id 获取队伍信息
+     *
+     * @param teamId
+     * @return
+     */
+    private Team getTeamById(Long teamId) {
+        if (teamId == null || teamId <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        Team team = this.getById(teamId);
+        if (team == null) {
+            throw new BusinessException(ErrorCode.NULL_ERROR, "队伍不存在");
+        }
+        return team;
+    }
 
     /**
      * 获取某队伍当前人数
@@ -379,6 +414,7 @@ public class TeamServiceImpl extends ServiceImpl<TeamMapper, Team>
         userTeamLambdaQueryWrapper.eq(UserTeam::getTeamId, teamId);
         return userTeamService.count(userTeamLambdaQueryWrapper);
     }
+
 
 
 }
