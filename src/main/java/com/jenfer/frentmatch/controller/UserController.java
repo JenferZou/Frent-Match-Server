@@ -211,7 +211,6 @@ public class UserController {
 
     /**
      * 获取最匹配的用户
-     *
      * @param num
      * @param request
      * @return
@@ -222,7 +221,7 @@ public class UserController {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         User user = userService.getLoginUser(request);
-        return ResultUtils.success(userService.matchUsers(num, user));
+        return ResultUtils.success( userService.matchUsers(num, user));
     }
 
 
